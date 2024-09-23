@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Algorithm - AlgoVault</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex items-center">
+            <div class="flex items-center">
+                <i class="fas fa-code text-blue-500 text-3xl mr-2"></i>
+                <h1 id="algovault" class="text-3xl font-bold text-blue-500">AlgoVault</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto mt-8 px-4 py-6 bg-white rounded-lg shadow-md" role="main">
+
+        <div class="flex items-center mb-6">
+            <a href="/" class="mr-4 text-gray-600 hover:text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </a>
+            <h2 id="edit-algorithm" class="text-2xl font-bold">Edit Algorithm: <span id="algorithmName"><%= algorithm.name %></span></h2>
+        </div>
+
+        <form action="/edit_algo/<%= algorithm.id %>" method="POST">
+            <div class="mb-4">
+                <label for="algo-name" class="block mb-2">Algorithm Name</label>
+                <input type="text" id="algo-name" name="name" value="<%= algorithm.name %>" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="category" class="block mb-2">Category</label>
+                <select id="category" name="category" class="w-full px-3 py-2 border rounded-md" required>
+                    <option value="Sorting" <%= algorithm.category === 'Sorting' ? 'selected' : '' %>>Sorting</option>
+                    <option value="Searching" <%= algorithm.category === 'Searching' ? 'selected' : '' %>>Searching</option>
+                    <option value="Graph" <%= algorithm.category === 'Graph' ? 'selected' : '' %>>Graph</option>
+                    <option value="Dynamic Programming" <%= algorithm.category === 'Dynamic Programming' ? 'selected' : '' %>>Dynamic Programming</option>
+                    <option value="Machine Learning" <%= algorithm.category === 'Machine Learning' ? 'selected' : '' %>>Machine Learning</option>
+                    <option value="Cryptography" <%= algorithm.category === 'Cryptography' ? 'selected' : '' %>>Cryptography</option>
+                    <option value="Numerical" <%= algorithm.category === 'Numerical' ? 'selected' : '' %>>Numerical</option>
+                    <option value="String" <%= algorithm.category === 'String' ? 'selected' : '' %>>String</option>
+                    <option value="Other" <%= algorithm.category === 'Other' ? 'selected' : '' %>>Other</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="description" class="block mb-2">Description</label>
+                <textarea id="description" name="description" rows="4" class="w-full px-3 py-2 border rounded-md" required><%= algorithm.description %></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label for="pseudocode" class="block mb-2">Pseudocode</label>
+                <textarea id="pseudocode" name="pseudocode" rows="6" class="w-full px-3 py-2 border rounded-md" required><%= algorithm.pseudocode %></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 mb-4">
+                <div>
+                    <label for="time-complexity" class="block mb-2">Time Complexity</label>
+                    <input type="text" id="time-complexity" name="timeComplexity" value="<%= algorithm.timeComplexity %>" class="w-full px-3 py-2 border rounded-md" required>
+                </div>
+                <div>
+                    <label for="space-complexity" class="block mb-2">Space Complexity</label>
+                    <input type="text" id="space-complexity" name="spaceComplexity" value="<%= algorithm.spaceComplexity %>" class="w-full px-3 py-2 border rounded-md" required>
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <button type="button" id="deleteAlgorithm" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300">Delete Algorithm</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">Save Changes</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        document.getElementById('deleteAlgorithm').addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete this algorithm? This action cannot be undone.')) {
+                fetch('/edit_algo/<%= algorithm.id %>', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = '/my_algorithms';
+                    } else {
+                        alert('Failed to delete algorithm. Please try again.');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
